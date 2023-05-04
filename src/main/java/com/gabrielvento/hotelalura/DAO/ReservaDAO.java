@@ -1,8 +1,10 @@
 package com.gabrielvento.hotelalura.DAO;
 
+import com.gabrielvento.hotelalura.model.Huesped;
 import com.gabrielvento.hotelalura.model.Reserva;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,15 @@ public class ReservaDAO implements ReservaInterface{
     }
 
     @Override
+    @Transactional
     public void eliminarReserva(long id) {
-        em.remove(em.find(Reserva.class, id));
+        Query query = em.createNativeQuery("DELETE FROM huespedes WHERE reserva_id = :reservaId");
+        query.setParameter("reservaId", id);
+        query.executeUpdate();
+
+        query = em.createNativeQuery("DELETE FROM reservas WHERE id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
